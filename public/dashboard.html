@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kas Kelas XII PPLG">
+    <title>Kas XII PPLG</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="wrap topbar-inner">
+            <a class="brand" onclick="navigateTo('dashboard')">
+                <img src="asset/webp/PPLG-LOGO.webp" alt="">
+                <span>Kas XII PPLG</span>
+            </a>
+            <nav class="nav" id="nav"></nav>
+            <div class="topbar-right">
+                <input class="search" id="global-search" type="search" placeholder="Cari…" oninput="handleSearch(this.value)">
+                <span id="user-slot"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <div class="page-head">
+            <h1 id="page-title">Dashboard</h1>
+            <p id="page-subtitle"></p>
+        </div>
+        <div id="content-area">
+            <div class="loading">Memuat…</div>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title"></h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+            <div class="modal-footer" id="modal-footer"></div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/core.js"></script>
+    <script src="js/chart.js"></script>
+    <script src="js/member.js"></script>
+    <script src="js/pages/dashboard.js"></script>
+    <script src="js/pages/payments.js"></script>
+    <script src="js/pages/recap.js"></script>
+    <script src="js/pages/donations.js"></script>
+    <script src="js/pages/expenses.js"></script>
+    <script src="js/pages/reports.js"></script>
+    <script src="js/pages/settings.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

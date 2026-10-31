@@ -1,0 +1,21 @@
+# Exclude dist and export_static.py
+dist/
+export_static.py
+
+# Server binaries & build objects
+server/server
+server/*.o
+*.o
+
+# Environment secrets
+.ENV
+.env
+server/.ENV
+server/.env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Local backup directory
+data/backups/

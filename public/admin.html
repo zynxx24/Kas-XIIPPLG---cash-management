@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kas XII PPLG - Login Admin">
+    <title>Login Admin · Kas XII PPLG</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="login">
+        <form class="login-card" id="form-admin" onsubmit="handleLogin(event)">
+            <img src="asset/webp/PPLG-LOGO.webp" alt="">
+            <h1>Kas XII PPLG</h1>
+            <p>Masuk sebagai administrator</p>
+
+            <div class="login-error" id="login-error"></div>
+
+            <div class="field">
+                <label for="admin-username">Username</label>
+                <input type="text" class="input" id="admin-username" autocomplete="username" required>
+            </div>
+            <div class="field">
+                <label for="admin-password">Password</label>
+                <input type="password" class="input" id="admin-password" autocomplete="current-password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Masuk</button>
+            <a class="login-back" href="/dashboard.html">← Kembali ke dashboard</a>
+        </form>
+    </div>
+
+    <script>
+        async function handleLogin(e) {
+            e.preventDefault();
+            const errorEl = document.getElementById('login-error');
+            errorEl.style.display = 'none';
+
+            const body = {
+                role: 'admin',
+                username: document.getElementById('admin-username').value,
+                password: document.getElementById('admin-password').value
+            };
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+
+                const data = await res.json();
+                if (!res.ok) {
+                    errorEl.textContent = data.error || 'Login gagal';
+                    errorEl.style.display = 'block';
+                    return;
+                }
+
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('role', data.role);
+                localStorage.setItem('name', body.username);
+
+                window.location.href = '/dashboard.html';
+            } catch (err) {
+                errorEl.textContent = 'Tidak dapat terhubung ke server';
+                errorEl.style.display = 'block';
+            }
+        }
+
+        if (localStorage.getItem('token') && localStorage.getItem('role') === 'admin') {
+            window.location.href = '/dashboard.html';
+        }
+    </script>
+</body>
+
+</html>
