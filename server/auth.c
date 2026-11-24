@@ -33,7 +33,6 @@ static void load_env(void) {
     const char *paths[] = {
         ".ENV",
         "server/.ENV",
-        "/home/wira/Desktop/XIIPPLG/server/.ENV",
         ".env",
         "server/.env"
     };
@@ -51,7 +50,6 @@ static void load_env(void) {
         /* Auto-create .ENV in server directory if missing */
         f = fopen(".ENV", "w");
         if (!f) f = fopen("server/.ENV", "w");
-        if (!f) f = fopen("/home/wira/Desktop/XIIPPLG/server/.ENV", "w");
         if (f) {
             fprintf(f, "# XII PPLG Cash Management Configuration\n");
             fprintf(f, "ADMIN_USERNAME=admin\n");

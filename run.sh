@@ -174,6 +174,11 @@ case "${1:-tunnel}" in
         wait $SERVER_PID
         ;;
     tunnel|*)
+        if [ ! -f "$SERVER_DIR/.ENV" ] && [ ! -f "$PROJECT_DIR/.ENV" ]; then
+            echo -e "${RED}[ERROR] server/.ENV belum ada. Tanpa file itu server memakai password admin bawaan.${NC}"
+            echo -e "${YELLOW}        Salin server/.ENV.example ke server/.ENV dan isi passwordnya, atau jalankan: ./run.sh local${NC}"
+            exit 1
+        fi
         echo -e "${YELLOW}Mode: Cloudflare Tunnel (public)${NC}\n"
         compile_server
         start_server

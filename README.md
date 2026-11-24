@@ -47,7 +47,7 @@ Semua endpoint ada di bawah `/api`:
 ## Keamanan
 
 - Kredensial admin dibaca dari `server/.ENV`, yang tidak ikut di-commit. Server hanya menyimpan dan membandingkan hash SHA-256 password-nya.
-- Kalau `server/.ENV` tidak ada, server memakai password bawaan. Selalu buat file itu sebelum membuka tunnel publik.
+- Kalau `server/.ENV` tidak ada, server memakai password bawaan. Karena itu `./run.sh` menolak membuka tunnel publik sebelum file itu dibuat.
 - Setiap IP dibatasi jumlah permintaannya, dan server memantau pemakaian CPU.
 - Backup data di `data/backups/` dienkripsi dengan `BACKUP_KEY` dan tidak ikut di-commit.
 
