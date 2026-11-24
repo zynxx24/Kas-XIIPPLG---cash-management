@@ -1,6 +1,5 @@
-# Exclude dist and export_static.py
+# Static export: a separate git repo (XII-PPLG---CASH-EXPORTED), managed by autopush.py
 dist/
-export_static.py
 
 # Server binaries & build objects
 server/server

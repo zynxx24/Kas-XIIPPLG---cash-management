@@ -33,6 +33,10 @@ cleanup() {
         kill $SERVER_PID 2>/dev/null
         echo -e "${GREEN}[OK] Server dihentikan${NC}"
     fi
+    if [ ! -z "$AUTOPUSH_PID" ]; then
+        kill $AUTOPUSH_PID 2>/dev/null
+        echo -e "${GREEN}[OK] Auto push dihentikan${NC}"
+    fi
     if [ ! -z "$TUNNEL_PID" ]; then
         kill $TUNNEL_PID 2>/dev/null
         echo -e "${GREEN}[OK] Cloudflare Tunnel dihentikan${NC}"
@@ -158,14 +162,37 @@ start_tunnel() {
     echo ""
 }
 
+# ── Auto push (data/ -> GitHub) ──
+# Before starting, pull the newest data so edits made on another laptop are not lost.
+# While running, push every data change to GitHub and refresh the online copy.
+# Turn off with: AUTOPUSH=0 ./run.sh
+sync_pull() {
+    [ "${AUTOPUSH:-1}" = "0" ] && return 0
+    echo -e "${BOLD}[SYNC] Mengambil data terbaru dari GitHub...${NC}"
+    if python3 "$PROJECT_DIR/autopush.py" --pull; then
+        echo -e "${GREEN}[OK] Data sudah terbaru${NC}\n"
+    else
+        echo -e "${YELLOW}[WARN] Gagal pull, lanjut pakai data lokal${NC}\n"
+    fi
+}
+
+start_autopush() {
+    [ "${AUTOPUSH:-1}" = "0" ] && { echo -e "${YELLOW}[INFO] Auto push mati (AUTOPUSH=0)${NC}"; return 0; }
+    python3 "$PROJECT_DIR/autopush.py" --watch &
+    AUTOPUSH_PID=$!
+    echo -e "${GREEN}[OK] Auto push aktif: setiap perubahan data dikirim ke GitHub${NC}\n"
+}
+
 # ── Main ──
 print_banner
+sync_pull
 
 case "${1:-tunnel}" in
     local)
         echo -e "${YELLOW}Mode: Local only (tanpa tunnel)${NC}\n"
         compile_server
         start_server
+        start_autopush
         echo -e "${GREEN}═══════════════════════════════════════════════════${NC}"
         echo -e "${GREEN}  ✅ Server berjalan!${NC}"
         echo -e "${GREEN}  📍 Local: http://localhost:$PORT${NC}"
@@ -182,6 +209,7 @@ case "${1:-tunnel}" in
         echo -e "${YELLOW}Mode: Cloudflare Tunnel (public)${NC}\n"
         compile_server
         start_server
+        start_autopush
         start_tunnel
         wait $TUNNEL_PID
         ;;

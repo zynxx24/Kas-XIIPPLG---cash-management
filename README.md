@@ -31,6 +31,31 @@ chmod +x run.sh
 
 Server berjalan di `http://localhost:8080`. Mode default (`./run.sh` tanpa argumen) membuka tunnel publik dan akan memasang `cloudflared` kalau belum ada, jadi pakai `local` kalau hanya ingin mencoba.
 
+## Auto push: data selalu ada di GitHub
+
+Setiap kali admin mengubah data (pembayaran, pengeluaran, donasi, pengaturan), `run.sh` otomatis:
+
+1. commit dan push folder `data/` ke repo ini,
+2. membangun ulang versi statis dengan `export_static.py`,
+3. push hasilnya ke [XII-PPLG---CASH-EXPORTED](https://github.com/zynxx24/XII-PPLG---CASH-EXPORTED), sehingga versi online ikut terbarui.
+
+Pengiriman terjadi 20 detik setelah edit terakhir, jadi beberapa perubahan sekaligus menjadi satu commit. Saat `run.sh` dijalankan, data terbaru diambil dulu dari GitHub, jadi kamu bisa clone repo ini di laptop mana pun dan lanjut dari data yang sama:
+
+```bash
+git clone https://github.com/zynxx24/Kas-XIIPPLG---cash-management.git
+cd Kas-XIIPPLG---cash-management
+cp server/.ENV.example server/.ENV   # isi password admin
+./run.sh local
+```
+
+Folder `dist/` (repo export) di-clone otomatis saat pertama kali push. Laptop itu perlu akses push ke kedua repo, misalnya lewat `gh auth login`.
+
+| Perintah | Fungsi |
+|---|---|
+| `python3 autopush.py` | Kirim perubahan sekarang juga |
+| `python3 autopush.py --pull` | Ambil data terbaru saja |
+| `AUTOPUSH=0 ./run.sh local` | Jalankan tanpa auto push |
+
 ## API
 
 Semua endpoint ada di bawah `/api`:
@@ -57,5 +82,7 @@ Semua endpoint ada di bawah `/api`:
 data/      basis data JSON (members, payments, expenses, donations, config)
 public/    frontend: admin.html, dashboard.html, css/, js/pages/
 server/    server C: main, server, router, api, auth, database, security, sha256, cJSON
-run.sh     kompilasi, jalankan server, dan buka tunnel
+run.sh            kompilasi, ambil data terbaru, jalankan server, auto push, dan tunnel
+autopush.py       kirim data/ dan versi statis ke GitHub
+export_static.py  bangun versi statis ke dist/
 ```
